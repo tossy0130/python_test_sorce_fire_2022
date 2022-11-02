@@ -79,7 +79,7 @@ GET_Scraping_Requests(get_url, 'index.txt')
 btn_01 = driver.find_element(By.ID, "test_01_btn").click()
 
 # btn_01.click()
-time.sleep(1.0)
+time.sleep(0.6)
 
 
 print("カレントURL:::" + driver.current_url)
@@ -98,7 +98,7 @@ t_id = url_str[idx + len(target):]
 GET_Scraping_Requests(url_str, 'view_list.txt')
 
 py_btn_02 = driver.find_element(By.ID, "py_btn_02").click()
-time.sleep(1.0)
+time.sleep(0.6)
 
 
 # ===============================================================
@@ -127,10 +127,33 @@ pass_word.send_keys("Jim357221")  # name 属性に値をセット
 
 user_id.submit()  # form を submit する。
 
-time.sleep(1.0)
+time.sleep(0.6)
 
-# ========= ログイン済み　view_list.php =========
+# ================================================================
+# ========= ログイン済み　view_list.php =========  ここから
+# ================================================================
 view_list_in_url = driver.current_url
 print("カレントURL:::" + view_list_in_url)
 print("カレントURL driver:::" + driver.current_url)
 GET_Scraping_Requests(view_list_in_url, 'view_list.txt')
+
+
+# =========== view_list.php を txt ファイルへ格納
+
+response_view = requests.get(view_list_in_url, verify=False)
+#view_php_text = BeautifulSoup(response_view.text, 'lxml')
+view_php_text = BeautifulSoup(response_view.text, 'html.parser')
+print(view_php_text)
+
+# ================ とりあえず ファイル出力テスト =================
+if not os.path.isfile('test.txt'):
+    with open('test.txt', mode='wb') as f:
+        for val in view_php_text:
+            f.write(val.encode('utf-8'))
+            print("============= test.txt 作成 OK if =============")
+
+else:
+    with open('test.txt', mode='wb') as f:
+        for val in view_php_text:
+            f.write(val.encode('utf-8'))
+            print("============= test.txt 作成 OK else =============")
