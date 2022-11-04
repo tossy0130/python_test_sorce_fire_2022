@@ -70,6 +70,9 @@ driver = webdriver.Chrome(
 # driver.get("https://192.168.254.204/kdemo/login.php")
 driver.get("https://192.168.254.204/kdemo/index.php")
 
+print('============ driver index.php 取得  ============')
+print(driver.page_source)
+
 # === 実行
 get_url = "https://192.168.254.204/kdemo/index.php"
 GET_Scraping_Requests(get_url, 'index.txt')
