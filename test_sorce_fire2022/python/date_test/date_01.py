@@ -1,5 +1,14 @@
 import datetime
 
+import requests
+from bs4 import BeautifulSoup, BeautifulStoneSoup
+
+from selenium import webdriver
+import time
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+
 
 class Date_To():
     # ============ 日時・時刻　クラス　============
@@ -15,10 +24,12 @@ class Date_To():
             ['7', '15:00']
         ]
 
+        self.dt_now = ""
+
     # === 当日取得 ::: 2022-11-04 14:26:56.878021
     def Now_date(self):
-        dt_now = datetime.datetime.now()
-        return dt_now
+        self.dt_now = datetime.datetime.now()
+        return self.dt_now
 
     # === 日付 ::: フォーマット 22-11-04
     def Date_cut(self, t_date):
@@ -29,6 +40,11 @@ class Date_To():
     # === index に応じた time_num の時間を出力
     def Yoyaku_Time_idx(self, idx, idx_02):
         return self.time_num[idx][idx_02]
+
+    def Date_Add(self, num):
+        date_add = self.dt_now + datetime.timedelta(days=num)
+        return date_add
+        # Date_To ****** END ********
 
 
 # === 実行
@@ -43,3 +59,16 @@ t_time_0 = Date_Obj.Yoyaku_Time_idx(4, 0)  # 例：5
 print(t_time_0 + ':::出力')
 t_time_1 = Date_Obj.Yoyaku_Time_idx(4, 1)  # 例：13:00
 print(t_time_1 + ':::出力')
+
+date_add = Date_Obj.Date_Add(6)
+print(date_add)
+
+
+driver = webdriver.Chrome(
+    executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')
+
+driver.get("https://qiita.com/std-flower/items/b6208eccc5f27ed8b034")
+
+# driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+driver.execute_script("window.scrollTo(0, 1000);")
+
