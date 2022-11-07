@@ -99,7 +99,7 @@ class Diff_File():
         self.file_02 = file_02
 
     def Diff_HTML(self, output_dir_path, output_file_name):
-        
+
         diff = difflib.HtmlDiff()
         output_file = output_file_name
         output_path = os.path.join(output_dir_path, output_file)
@@ -167,7 +167,7 @@ else:
     # ======　ソースが合ってなかったら、メール送信
     # === 送受信先
     Send_obj = Send_Mail('jimnet.co.jp', '587', 'natsume@jimnet.co.jp',
-                         'ydvH28#B', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
+                         'パスワード', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
 
     Send_obj.Send_Mail_To()
 

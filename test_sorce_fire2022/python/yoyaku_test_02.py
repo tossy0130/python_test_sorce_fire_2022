@@ -197,7 +197,7 @@ class Send_Mail():
         # デバッガ
         # server.set_debuglevel(True)
         # === 送受信先
-        
+
 
 def Send_Mail_Body():
     # === ファイルが違った場合のエラーメッセージ
@@ -337,7 +337,6 @@ time.sleep(1.0)
 
 # ========== reserve_edit.php
 
-GET_Scraping_Requests(driver.current_url, 'reserve_edit.txt')
 
 # === フォームに値セット
 Set_Name_Val('souke_name', '織田')  # 葬家名
@@ -349,6 +348,8 @@ Set_Name_Val('dead_name01', '織田')  # 死亡者氏名 姓
 Set_Name_Val('dead_name02', '信秀')  # 死亡者氏名  名
 
 time.sleep(0.5)
+
+GET_Scraping_Requests(driver.current_url, 'reserve_edit.txt')
 
 # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 driver.execute_script("window.scrollTo(0, 1000);")
