@@ -21,33 +21,32 @@ import os
 
 
 def GET_Scraping_Requests(url, file_name):
+    # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
     get_url = url
     response = requests.get(get_url, verify=False)
     #html_text = BeautifulSoup(response.text, 'html.parser')
     html_text = BeautifulSoup(response.text, 'lxml')
 
+    File_Write('python/back_up/' + file_name, html_text)  # ファイル書き込み関数
+
     # ファイル存在チェック
     if os.path.exists('python/back_up/' + file_name):
-        # === function 実行 ===
-        File_Write('python/back_up/' + file_name, html_text)  # ファイル書き込み関数
+        # === ファイルが存在していたら、比較用　ファイル作成
+        File_Write('python/back_up_02/' + file_name, html_text)  # ファイル書き込み関数
     else:
-        # ファイルが無かった場合は作成する
-        path = 'python/back_up/' + file_name
-        f = open(path, 'w')
-        f.write('')
-        f.close()
-
-# ================== ファイル書き込み
+        # === ファイルが存在していなかったら、原本ファイル作成
+        File_Write('python/back_up/' + file_name, html_text)  # ファイル書き込み関数
 
 
 def File_Write(path_w, get_text):
+    # ================== ファイル書き込み
     with open(path_w, mode='wb') as f:
         for item in get_text:
             f.write(item.encode('utf-8'))
 
 
-# ================== フォルダ作成
 def File_Check():
+    # ================== ディレクトリ作成
     path = 'python/back_up'
 
     try:
@@ -61,8 +60,22 @@ def File_Check():
 # ===================
 
 
+def Check_Dir(path):
+    # ==================　path　の場所に ディレクトリ作成
+    d_path = path
+
+    try:
+        if(os.path.isdir(d_path)):  # フォルダが存在していた場合
+            pass
+        else:
+            os.makedirs(d_path)
+    except FileExistsError:
+        print('関数名:Check_Dir ::: ディレクトリ作成エラー')
+
+
 # ファイルチェック実行
 File_Check()
+Check_Dir('python/back_up_02')
 
 driver = webdriver.Chrome(
     executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')

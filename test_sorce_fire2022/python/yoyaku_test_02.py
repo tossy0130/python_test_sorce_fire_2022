@@ -1,5 +1,6 @@
 import datetime
 import datetime as dt
+from importlib.resources import path
 
 import requests
 from bs4 import BeautifulSoup, BeautifulStoneSoup
@@ -10,7 +11,72 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
+from smtplib import SMTP
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.utils import formatdate
+from email.mime.text import MIMEText  # MIME 形式データ用
+from email.utils import formatdate
+import smtplib
+
+
 import os
+
+#　元ファイル用 ディレクトリ
+DIR_PATH = 'python/test/back_up/'
+# 比較ファイル用 ディレクトリ
+DIR_PATH_HIKAKU = 'python/test/back_up02/'
+
+URL_ARR = []
+
+
+def Check_Dir(path):
+    # ==================　path　の場所に ディレクトリ作成
+    d_path = path
+
+    try:
+        if(os.path.isdir(d_path)):  # フォルダが存在していた場合
+            pass
+        else:
+            os.makedirs(d_path)
+    except FileExistsError:
+        print('関数名:Check_Dir ::: ディレクトリ作成エラー')
+
+
+def GET_Scraping_Requests(url, file_name):
+    # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
+    get_url = url
+    response = requests.get(get_url, verify=False)
+    #html_text = BeautifulSoup(response.text, 'html.parser')
+    html_text = BeautifulSoup(response.text, 'lxml')
+
+    # ファイル存在チェック
+    if os.path.exists(DIR_PATH + file_name):  # python/test/back_up
+        # === ファイルが存在していたら、比較用　ファイル作成
+        File_Write(DIR_PATH_HIKAKU + file_name, html_text)  # ファイル書き込み関数
+    else:
+        # === ファイルが存在していなかったら、原本ファイル作成
+        File_Write(DIR_PATH + file_name, html_text)  # ファイル書き込み関数
+
+
+def File_Write(path_w, get_text):
+    # ================== ファイル書き込み
+    with open(path_w, mode='wb') as f:
+        for item in get_text:
+            f.write(item.encode('utf-8'))
+
+
+def Check_Dir(path):
+    # ==================　path　の場所に ディレクトリ作成
+    d_path = path
+
+    try:
+        if(os.path.isdir(d_path)):  # フォルダが存在していた場合
+            pass
+        else:
+            os.makedirs(d_path)
+    except FileExistsError:
+        print('関数名:Check_Dir ::: ディレクトリ作成エラー')
 
 
 class Date_To():
@@ -64,23 +130,118 @@ def Sub_Mit(name):
     tmp_name.submit()
 
 
+class Send_Mail():
+
+    def __init__(self, host, port, account, password, from_email, to_email):
+        self.host = host
+        self.port = port
+        self.account = account
+        self.password = password
+        self.from_email = from_email
+        self.to_email = to_email
+
+    def Set_Smtp(self, host, port):
+        if self.host != None and self.port != None:
+            return smtplib.SMTP(self.host, self.port)
+        else:
+            return smtplib.SMTP(host, port)
+
+    def Set_Account(self, account, password):
+
+        if self.account != None and self.password != None:
+            Account[0] = self.account
+            Account[1] = self.password
+            return Account
+        else:
+            Account = []
+            Account[0] = account
+            Account[1] = password
+            return Account
+
+    def Mail_from_to(self, from_email, to_email):
+
+        if self.from_email != None and self.to_email != None:
+            From_To = []
+            From_To[0] = self.to_email
+            From_To[1] = self.from_email
+            return From_To
+        else:
+            From_To = []
+            From_To[0] = to_email
+            From_To[1] = from_email
+            return From_To
+
+    def Send_Mail_To(self):
+
+        # MIMEの作成
+        subject = "テストメール3"
+        message = "テストメール3"
+        msg = MIMEText(message, "html")
+        msg["Subject"] = subject
+        msg["To"] = self.to_email
+        msg["From"] = self.from_email
+
+        # メール送信処理
+        # server = smtplib.SMTP("smtp.gmail.com", ポート)
+        server = smtplib.SMTP(self.host, self.port)
+      #  server = Send_obj.Set_Smtp(self.host, self.port)
+        server.starttls()
+        server.login(self.account, self.password)
+        server.send_message(msg)
+
+        server.quit()
+
+        # ====== メール送信
+        # server = smtplib.SMTP("SMTPサーバ", ポート番号)
+
+        # デバッガ
+        # server.set_debuglevel(True)
+        # === 送受信先
+        
+
+def Send_Mail_Body():
+    # === ファイルが違った場合のエラーメッセージ
+    r_message = ''
+    r_message = 'ファイル名:diff.html' + '\n'
+    r_message += 'メッセージ内容:ソースが違っています。'
+    return r_message
+
+
+# ======================= 作業 Start ======================
+
+# === ディレクトリ作成
+Check_Dir(DIR_PATH)  # 原本 ディレクトリ
+Check_Dir(DIR_PATH_HIKAKU)  # 比較用 ディレクトリ
+
+
+# selenium での　chrome の実行ファイル　指定
 driver = webdriver.Chrome(
     executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')
 
 driver.get("https://192.168.254.204/kdemo/index.php")
 
-# === index.php
+# === ＊＊＊＊＊＊＊＊＊＊＊＊　index.php
+
+# ＊＊＊ スクレイピング　、　ログファイル作成
+GET_Scraping_Requests(driver.current_url, 'index.txt')
+
 # click イベント
 btn_01 = driver.find_element(By.ID, "test_01_btn").click()
 time.sleep(0.6)
 
-print("カレントURL:::" + driver.current_url)
-
 # === view_list.php
+
+print("カレントURL 2:::" + driver.current_url)
+
+
 py_btn_02 = driver.find_element(By.ID, "py_btn_02").click()
 time.sleep(0.6)
 
-# === login.php
+# === ＊＊＊＊＊＊＊＊＊＊＊＊ login.php
+
+# ＊＊＊ スクレイピング　、　ログファイル作成
+GET_Scraping_Requests(driver.current_url, 'login.txt')
+
 user_id = driver.find_element(By.NAME, "user_id")  # name 属性取得
 pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
 
@@ -99,6 +260,26 @@ user_id.submit()  # form を submit する。
 # =====================================================================================
 
 print('カレントURL:::' + driver.current_url)
+
+# ＊＊＊ スクレイピング　、　ログファイル作成
+GET_Scraping_Requests(driver.current_url, 'view_list.txt')
+
+py_btn_02 = driver.find_element(By.ID, "py_btn_02").click()
+
+# ====================================================
+# ================ reserve_list.php ==================
+# ====================================================
+time.sleep(0.6)
+
+GET_Scraping_Requests(driver.current_url, 'reserve_list.txt')
+
+driver.execute_script("main.setModeAndSubmit('form1', 'view_list')")
+
+time.sleep(0.6)
+
+# =====================================================================================
+# ================== view_list.php　、　「火葬タイプ」 「予約日」　指定　==================
+# =====================================================================================
 
 # 火葬タイプ選択  kasou_type
 # radio_01 = driver.find_element(By.NAME, 'kasou_type')[0].click()
@@ -130,10 +311,6 @@ g_date = Date_Obj.Date_cut(k_date)
 #    "javascript:main.set4KeyAndSubmit('form1', 'reserve_entry', 'YOYAKUBI', '22-11-14','WAKU_NO', '6', 'YOYAKU_TIME', '14:00', 'shiki_type', '0')")
 
 
-# driver.execute_script(
-#    "javascript:main.set4KeyAndSubmit('form1', 'reserve_entry', 'YOYAKUBI', '22-11-14','WAKU_NO', '6', 'YOYAKU_TIME', '14:00', 'shiki_type', '0')")
-
-
 # ========= 枠ナンバー ＆　時間　指定  ===========
 
 t_time_0 = Date_Obj.Yoyaku_Time_idx(6, 0)  # 7
@@ -159,6 +336,8 @@ driver.execute_script(
 time.sleep(1.0)
 
 # ========== reserve_edit.php
+
+GET_Scraping_Requests(driver.current_url, 'reserve_edit.txt')
 
 # === フォームに値セット
 Set_Name_Val('souke_name', '織田')  # 葬家名
@@ -191,12 +370,21 @@ driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 driver.execute_script(
     "main.setModeAndSubmit('form1', 'entry_confirm')")
 
-time.sleep(2.0)
+time.sleep(1.0)
 
 # =====================================================================================
 # ================== reserve_confirm.php　==================
 # =====================================================================================
 
+GET_Scraping_Requests(driver.current_url, 'reserve_confirm.txt')
+
+time.sleep(0.5)
+
+# ===　＊＊＊＊＊＊＊＊＊＊　Chrome Driver 終了 & chrome終了　＊＊＊＊＊＊＊＊＊＊
+driver.quit()
+
 # === 予約 OK ボタン　submit
 # driver.execute_script(
 #    "main.setModeAndSubmit('form1', 'entry_execute')")
+
+# ===
