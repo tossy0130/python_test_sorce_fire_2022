@@ -30,6 +30,52 @@ DIR_PATH_HIKAKU = 'python/test/back_up02/'
 URL_ARR = []
 
 
+# === reserve_edit.php での「データクレンジング」
+# 火葬予約日時 name（yoyakubi_date）, 火葬受付番号 name（renban） を空にする
+def Create_File_02_TEST(url, file_name):
+
+    # # === 時刻取得
+    yoyakubi_date = driver.find_element(
+        By.CSS_SELECTOR, "#form1 > table:nth-child(4) > tbody > tr:nth-child(1) > td")
+    print('yoyakubi_date :::' + yoyakubi_date.text)
+
+    name_yoyakubi_date = driver.find_element(
+        By.NAME, "yoyakubi_date")
+
+    yoyakubi_date_val = name_yoyakubi_date.get_attribute("value")
+    print('yoyakubi_date_val:::' + str(yoyakubi_date_val))
+
+    renban = driver.find_element(
+        By.CSS_SELECTOR, "#form1 > table:nth-child(4) > tbody > tr:nth-child(2) > td")
+
+    print('renban :::' + renban.text)
+
+    # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
+    get_url = url
+
+    html_text = driver.page_source  # selenium
+
+    # === ファイルが存在していなかったら、原本ファイル作成
+    File_Write(DIR_PATH + file_name, html_text)  # ファイル書き込み関数
+
+    with open(DIR_PATH + file_name, encoding='utf-8') as f:
+        data_lines = f.read()
+
+        # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
+        data_lines = data_lines.replace(yoyakubi_date.text, '')
+        data_lines = data_lines.replace(renban.text, '')
+
+        # name = yoyakubi_data の value を空にする
+        data_lines = data_lines.replace(
+            "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
+
+        # data_lines = data_lines.replace('Changed', '変更')
+        # data_lines = data_lines.replace('Deleted', '削除')
+
+    with open(DIR_PATH + file_name, mode='w', encoding='utf-8') as f:
+        f.write(data_lines)
+
+
 def Check_Dir(path):
     # ==================　path　の場所に ディレクトリ作成
     d_path = path
@@ -46,9 +92,13 @@ def Check_Dir(path):
 def GET_Scraping_Requests(url, file_name):
     # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
     get_url = url
-    response = requests.get(get_url, verify=False)
-    #html_text = BeautifulSoup(response.text, 'html.parser')
-    html_text = BeautifulSoup(response.text, 'lxml')
+
+   # =========== BeautifulSoup
+   # response = requests.get(get_url, verify=False)
+   # html_text = BeautifulSoup(response.text, 'html.parser')
+
+    html_text = driver.page_source  # selenium
+    # html_text = BeautifulSoup(response.text, 'lxml')
 
     # ファイル存在チェック
     if os.path.exists(DIR_PATH + file_name):  # python/test/back_up
@@ -133,12 +183,12 @@ def Sub_Mit(name):
 class Send_Mail():
 
     def __init__(self, host, port, account, password, from_email, to_email):
-        self.host = host
-        self.port = port
-        self.account = account
-        self.password = password
-        self.from_email = from_email
-        self.to_email = to_email
+        self.host = host  # ホスト
+        self.port = port  # ポート
+        self.account = account  # アカウント
+        self.password = password  # パスワード
+        self.from_email = from_email  # 送信元
+        self.to_email = to_email  # 送信先
 
     def Set_Smtp(self, host, port):
         if self.host != None and self.port != None:
@@ -207,6 +257,12 @@ def Send_Mail_Body():
     return r_message
 
 
+def Print_NamiNami():
+    print("=========================================================" + '\n' +
+          "=========================================================" + '\n' +
+          "=========================================================")
+
+
 # ======================= 作業 Start ======================
 
 # === ディレクトリ作成
@@ -220,10 +276,15 @@ driver = webdriver.Chrome(
 
 driver.get("https://192.168.254.204/kdemo/index.php")
 
+html = driver.page_source
+print('html:::' + html)
+
 # === ＊＊＊＊＊＊＊＊＊＊＊＊　index.php
 
+print('カレントURL_1 index:::' + driver.current_url)
 # ＊＊＊ スクレイピング　、　ログファイル作成
 GET_Scraping_Requests(driver.current_url, 'index.txt')
+Print_NamiNami()
 
 # click イベント
 btn_01 = driver.find_element(By.ID, "test_01_btn").click()
@@ -231,16 +292,21 @@ time.sleep(0.6)
 
 # === view_list.php
 
-print("カレントURL 2:::" + driver.current_url)
-
+print("カレントURL_2 view_list:::" + driver.current_url)
 
 py_btn_02 = driver.find_element(By.ID, "py_btn_02").click()
 time.sleep(0.6)
 
 # === ＊＊＊＊＊＊＊＊＊＊＊＊ login.php
 
+print('カレントURL_3 login :::' + driver.current_url)
 # ＊＊＊ スクレイピング　、　ログファイル作成
 GET_Scraping_Requests(driver.current_url, 'login.txt')
+
+html2 = driver.page_source
+print('html2:::' + html2)
+
+Print_NamiNami()
 
 user_id = driver.find_element(By.NAME, "user_id")  # name 属性取得
 pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
@@ -259,23 +325,38 @@ user_id.submit()  # form を submit する。
 # ================== view_list.php　、　「火葬タイプ」 「予約日」　指定　==================
 # =====================================================================================
 
-print('カレントURL:::' + driver.current_url)
+time.sleep(2.6)
+
+print('カレントURL_4 view_list :::' + driver.current_url)
 
 # ＊＊＊ スクレイピング　、　ログファイル作成
 GET_Scraping_Requests(driver.current_url, 'view_list.txt')
+
+html3 = driver.page_source
+print('html3:::' + html3)
+
+Print_NamiNami()
 
 py_btn_02 = driver.find_element(By.ID, "py_btn_02").click()
 
 # ====================================================
 # ================ reserve_list.php ==================
 # ====================================================
-time.sleep(0.6)
+
+time.sleep(4.6)
+
+print('カレントURL_5 reserve_list :::' + driver.current_url)
 
 GET_Scraping_Requests(driver.current_url, 'reserve_list.txt')
 
-driver.execute_script("main.setModeAndSubmit('form1', 'view_list')")
+html4 = driver.page_source
+print('html4:::' + html4)
 
-time.sleep(0.6)
+Print_NamiNami()
+
+time.sleep(4.6)
+
+driver.execute_script("main.setModeAndSubmit('form1', 'view_list')")
 
 # =====================================================================================
 # ================== view_list.php　、　「火葬タイプ」 「予約日」　指定　==================
@@ -338,6 +419,7 @@ time.sleep(1.0)
 
 # ========== reserve_edit.php
 
+Create_File_02_TEST(driver.current_url, 'reserve_edit.txt')
 
 # === フォームに値セット
 Set_Name_Val('souke_name', '織田')  # 葬家名
@@ -350,7 +432,14 @@ Set_Name_Val('dead_name02', '信秀')  # 死亡者氏名  名
 
 time.sleep(0.5)
 
-GET_Scraping_Requests(driver.current_url, 'reserve_edit.txt')
+print('カレントURL_6 reserve_edit :::' + driver.current_url)
+# GET_Scraping_Requests(driver.current_url, 'reserve_edit.txt')
+
+
+html5 = driver.page_source
+print('html5:::' + html5)
+
+Print_NamiNami()
 
 # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 driver.execute_script("window.scrollTo(0, 1000);")
@@ -378,15 +467,49 @@ time.sleep(1.0)
 # ================== reserve_confirm.php　==================
 # =====================================================================================
 
+print('カレントURL_7 reserve_confirm :::' + driver.current_url)
 GET_Scraping_Requests(driver.current_url, 'reserve_confirm.txt')
+
+html6 = driver.page_source
+print('html6:::' + html6)
+
+Print_NamiNami()
+
 
 time.sleep(0.5)
 
 # ===　＊＊＊＊＊＊＊＊＊＊　Chrome Driver 終了 & chrome終了　＊＊＊＊＊＊＊＊＊＊
-driver.quit()
+driver.quit()  # chromeを閉じる
 
 # === 予約 OK ボタン　submit
 # driver.execute_script(
 #    "main.setModeAndSubmit('form1', 'entry_execute')")
 
-# ===
+
+# ==========================================================
+# =============== ソース比較処理 ============================
+# ==========================================================
+
+class Diff_File():
+    def __init__(self, path_01, path_02, file_01, file_02):
+        self.path_01 = path_01  # 原本 ディレクトリ パス
+        self.path_02 = path_02  # 比較用 ディレクトリ パス
+        self.file_01 = file_01  # 原本　ファイル名
+        self.file_02 = file_02  # 比較用　ファイル名
+
+    def Diff_HTML(self, output_dir_path, output_file_name):
+
+        file1_p = os.path.join(self.path_01, self.file_01)  # 原本
+        file2_p = os.path.join(self.path_02, self.file_02)  # 比較用
+
+        diff = difflib.HtmlDiff()
+        output_file = output_file_name  # 出力用ファイル名
+        output_path = os.path.join(
+            output_dir_path, output_file)  # output_dir_path = 出力用ディレクトリ　パス
+
+        file1 = open(file1_p, 'r', encoding="utf-8_sig")
+        file2 = open(file2_p, 'r', encoding="utf-8_sig")
+
+        # ファイル書き込み
+        output_create = open(output_path, 'w', encoding="utf-8")
+        output_create.writelines(diff.make_file(file1, file2))

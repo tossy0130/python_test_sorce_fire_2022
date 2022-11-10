@@ -91,26 +91,38 @@ def Send_Mail_Body():
     # server.set_debuglevel(True)
 
 
-class Diff_File():
-    def __init__(self, path_01, path_02, file_01, file_02):
-        self.path_01 = path_01
-        self.path_02 = path_02
-        self.file_01 = file_01
-        self.file_02 = file_02
-
-    def Diff_HTML(self, output_dir_path, output_file_name):
-
-        diff = difflib.HtmlDiff()
-        output_file = output_file_name
-        output_path = os.path.join(output_dir_path, output_file)
-
-
 # ===================================================================================
 # ================================= メール送信 END ===================================
 # ===================================================================================
+
+
 # ===================================================================================
 # ================================= ソース比較 =======================================
 # ===================================================================================
+class Diff_File():
+    def __init__(self, path_01, path_02, file_01, file_02):
+        self.path_01 = path_01  # 原本 ディレクトリ パス
+        self.path_02 = path_02  # 比較用 ディレクトリ パス
+        self.file_01 = file_01  # 原本　ファイル名
+        self.file_02 = file_02  # 比較用　ファイル名
+
+    def Diff_HTML(self, output_dir_path, output_file_name):
+
+        file1_p = os.path.join(self.path_01, self.file_01)  # 原本
+        file2_p = os.path.join(self.path_02, self.file_02)  # 比較用
+
+        diff = difflib.HtmlDiff()
+        output_file = output_file_name  # 出力用ファイル名
+        output_path = os.path.join(
+            output_dir_path, output_file)  # output_dir_path = 出力用ディレクトリ　パス
+
+        file1 = open(file1_p, 'r', encoding="utf-8_sig")
+        file2 = open(file2_p, 'r', encoding="utf-8_sig")
+
+        # ファイル書き込み
+        output_create = open(output_path, 'w', encoding="utf-8")
+        output_create.writelines(diff.make_file(file1, file2))
+
 dir_path = r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\back_up\\'
 
 # 比較用　ファイル
@@ -167,10 +179,9 @@ else:
     # ======　ソースが合ってなかったら、メール送信
     # === 送受信先
     Send_obj = Send_Mail('jimnet.co.jp', '587', 'natsume@jimnet.co.jp',
-                         'パスワード', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
+                         'ydvH28#B', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
 
     Send_obj.Send_Mail_To()
-
 
 file11.close()
 file22.close()
