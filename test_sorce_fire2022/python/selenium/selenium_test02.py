@@ -61,3 +61,22 @@ print('div.strong:::' + i_div_strong.text)
 
 
 #main > span
+
+
+"""
+
+visibility_of_element_located	指定した要素の表示される
+text_to_be_present_in_element	指定したテキストが表示される
+presence_of_all_elements_located	ページ内のすべての要素が読み込まれる
+presence_of_element_located	DOM要素内に指定した要素が現れる
+alert_is_present	Alertが表示される
+element_to_be_clickable	要素がクリック出来る状態になる
+
+tag名による指定
+id属性による指定
+class属性による指定
+name属性による指定
+CSSセレクターによる指定
+XPathによる指定
+
+"""
