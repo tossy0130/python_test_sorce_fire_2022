@@ -38,8 +38,8 @@ try:
     user_id_s.clear()
     pass_word_s.clear()
 
-    user_id_s.send_keys("natsume")  # name 属性に値をセット
-    pass_word_s.send_keys("jim10")  # name 属性に値をセット
+    user_id_s.send_keys("ログインID")  # name 属性に値をセット
+    pass_word_s.send_keys("パス")  # name 属性に値をセット
 
     user_id_s.submit()  # form を submit する。
 
