@@ -1,14 +1,5 @@
 import datetime
 
-import requests
-from bs4 import BeautifulSoup, BeautifulStoneSoup
-
-from selenium import webdriver
-import time
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-
 
 class Gengou():
 
@@ -46,7 +37,7 @@ change_date = to_date.strftime("%Y-%m-%d")
 now_y = change_date[:4]  # 西暦 取得
 month = change_date[5:7]  # 月　取得
 
-
+# 西暦 ➡ 元号　変換
 Genotu_obj = Gengou()
 data_set = Genotu_obj.Data_Set()
 gengou_y = Genotu_obj.Gengou_Print(now_y, month, data_set,)

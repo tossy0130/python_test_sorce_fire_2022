@@ -13,12 +13,12 @@ import smtplib
 class Send_Mail():
 
     def __init__(self, host, port, account, password, from_email, to_email):
-        self.host = host
-        self.port = port
-        self.account = account
-        self.password = password
-        self.from_email = from_email
-        self.to_email = to_email
+        self.host = host  # ホスト
+        self.port = port  # ポート
+        self.account = account  # アカウント
+        self.password = password  # パスワード
+        self.from_email = from_email  # 送信先
+        self.to_email = to_email  # 送信元
 
     def Set_Smtp(self, host, port):
         if self.host != None and self.port != None:
@@ -73,6 +73,7 @@ class Send_Mail():
 
         # ====== メール送信
         # server = smtplib.SMTP("SMTPサーバ", ポート番号)
+
 
         # デバッガ
         # server.set_debuglevel(True)

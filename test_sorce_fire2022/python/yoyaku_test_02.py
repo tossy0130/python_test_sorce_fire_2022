@@ -1,6 +1,8 @@
 import datetime
 import datetime as dt
+from genericpath import isfile
 from importlib.resources import path
+from opcode import opname
 
 import requests
 from bs4 import BeautifulSoup, BeautifulStoneSoup
@@ -19,6 +21,8 @@ from email.mime.text import MIMEText  # MIME 形式データ用
 from email.utils import formatdate
 import smtplib
 
+import difflib
+
 
 import os
 
@@ -26,6 +30,8 @@ import os
 DIR_PATH = 'python/test/back_up/'
 # 比較ファイル用 ディレクトリ
 DIR_PATH_HIKAKU = 'python/test/back_up02/'
+
+LOG_DIR = 'python/test/log/'
 
 URL_ARR = []
 
@@ -56,24 +62,50 @@ def Create_File_02_TEST(url, file_name):
     html_text = driver.page_source  # selenium
 
     # === ファイルが存在していなかったら、原本ファイル作成
-    File_Write(DIR_PATH + file_name, html_text)  # ファイル書き込み関数
+    # ファイル存在チェック
+    if os.path.exists(DIR_PATH + file_name):  # python/test/back_up
+        # === ファイルが存在していたら、比較用　ファイル作成
+        File_Write(DIR_PATH_HIKAKU + file_name, html_text)  # ファイル書き込み関数
 
-    with open(DIR_PATH + file_name, encoding='utf-8') as f:
-        data_lines = f.read()
+        # ====== value を空にする =======
+        with open(DIR_PATH_HIKAKU + file_name, encoding='utf-8') as f:
+            data_lines = f.read()
 
-        # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
-        data_lines = data_lines.replace(yoyakubi_date.text, '')
-        data_lines = data_lines.replace(renban.text, '')
+            # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
+            data_lines = data_lines.replace(yoyakubi_date.text, '')
+            data_lines = data_lines.replace(renban.text, '')
 
-        # name = yoyakubi_data の value を空にする
-        data_lines = data_lines.replace(
-            "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
+            # name = yoyakubi_data の value を空にする
+            data_lines = data_lines.replace(
+                "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
 
-        # data_lines = data_lines.replace('Changed', '変更')
-        # data_lines = data_lines.replace('Deleted', '削除')
+            # data_lines = data_lines.replace('Changed', '変更')
+            # data_lines = data_lines.replace('Deleted', '削除')
 
-    with open(DIR_PATH + file_name, mode='w', encoding='utf-8') as f:
-        f.write(data_lines)
+        with open(DIR_PATH_HIKAKU + file_name, mode='w', encoding='utf-8') as f:
+            f.write(data_lines)
+
+    else:
+        # === ファイルが存在していなかったら、原本ファイル作成
+        File_Write(DIR_PATH + file_name, html_text)  # ファイル書き込み関数
+
+        # ====== value を空にする =======
+        with open(DIR_PATH + file_name, encoding='utf-8') as f:
+            data_lines = f.read()
+
+            # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
+            data_lines = data_lines.replace(yoyakubi_date.text, '')
+            data_lines = data_lines.replace(renban.text, '')
+
+            # name = yoyakubi_data の value を空にする
+            data_lines = data_lines.replace(
+                "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
+
+            # data_lines = data_lines.replace('Changed', '変更')
+            # data_lines = data_lines.replace('Deleted', '削除')
+
+        with open(DIR_PATH + file_name, mode='w', encoding='utf-8') as f:
+            f.write(data_lines)
 
 
 def Check_Dir(path):
@@ -108,10 +140,21 @@ def GET_Scraping_Requests(url, file_name):
         # === ファイルが存在していなかったら、原本ファイル作成
         File_Write(DIR_PATH + file_name, html_text)  # ファイル書き込み関数
 
+# ====== ファイル書き込み
+
 
 def File_Write(path_w, get_text):
     # ================== ファイル書き込み
     with open(path_w, mode='wb') as f:
+        for item in get_text:
+            f.write(item.encode('utf-8'))
+
+# ====== ファイル追記
+
+
+def File_Append(path_w, get_text):
+    # ================= ファイル追記
+    with open(path_w, mode='ab') as f:
         for item in get_text:
             f.write(item.encode('utf-8'))
 
@@ -180,6 +223,7 @@ def Sub_Mit(name):
     tmp_name.submit()
 
 
+# ===================== メール送信 =====================
 class Send_Mail():
 
     def __init__(self, host, port, account, password, from_email, to_email):
@@ -221,11 +265,11 @@ class Send_Mail():
             From_To[1] = from_email
             return From_To
 
-    def Send_Mail_To(self):
+    def Send_Mail_To(self, file_name):
 
         # MIMEの作成
         subject = "テストメール3"
-        message = "テストメール3"
+        message = Send_Mail_Body(file_name)
         msg = MIMEText(message, "html")
         msg["Subject"] = subject
         msg["To"] = self.to_email
@@ -248,13 +292,17 @@ class Send_Mail():
         # server.set_debuglevel(True)
         # === 送受信先
 
+# ================ Function メール内容
 
-def Send_Mail_Body():
+
+def Send_Mail_Body(file_name):
     # === ファイルが違った場合のエラーメッセージ
     r_message = ''
-    r_message = 'ファイル名:diff.html' + '\n'
-    r_message += 'メッセージ内容:ソースが違っています。'
+    r_message = '対象ファイル名:' + file_name
+    r_message += '「警告」メッセージ内容:ソースが違っています。'
     return r_message
+
+# =============== ログ閲覧時 見易さ調整用 Function
 
 
 def Print_NamiNami():
@@ -268,6 +316,7 @@ def Print_NamiNami():
 # === ディレクトリ作成
 Check_Dir(DIR_PATH)  # 原本 ディレクトリ
 Check_Dir(DIR_PATH_HIKAKU)  # 比較用 ディレクトリ
+Check_Dir(LOG_DIR)  # エラー時、log.txt 格納用　ディレクトリ
 
 
 # selenium での　chrome の実行ファイル　指定
@@ -314,8 +363,8 @@ pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
 user_id.clear()
 pass_word.clear()
 
-user_id.send_keys("jimcom35")  # name 属性に値をセット
-pass_word.send_keys("Jim357221")  # name 属性に値をセット
+user_id.send_keys("")  # name 属性に値をセット
+pass_word.send_keys("")  # name 属性に値をセット
 
 user_id.submit()  # form を submit する。
 
@@ -497,6 +546,7 @@ class Diff_File():
         self.file_01 = file_01  # 原本　ファイル名
         self.file_02 = file_02  # 比較用　ファイル名
 
+    # === ２つのファイルを、比較した結果を、HTMLとして出力
     def Diff_HTML(self, output_dir_path, output_file_name):
 
         file1_p = os.path.join(self.path_01, self.file_01)  # 原本
@@ -513,3 +563,69 @@ class Diff_File():
         # ファイル書き込み
         output_create = open(output_path, 'w', encoding="utf-8")
         output_create.writelines(diff.make_file(file1, file2))
+
+    # === ２つのファイルを、比較した結果、ファイルに違いがあれば、メール送信
+    def Diff_FILE_SendMail(self):
+
+        file1_p = os.path.join(self.path_01, self.file_01)  # 原本ファイル
+        file2_p = os.path.join(self.path_02, self.file_02)  # 比較用ファイル
+
+        diff_file01 = open(file1_p, 'r', encoding="utf-8_sig")
+        diff_file02 = open(file2_p, 'r', encoding="utf-8_sig")
+        diff_02 = difflib.Differ()
+
+        output_diff02 = diff_02.compare(
+            diff_file01.readlines(), diff_file02.readlines())
+
+        # === diff_file01 , diff_file02 のファイルを比較
+        diff_Flg = True
+        for diff_data in output_diff02:
+
+            if diff_data[0:1] in ['+', '-']:
+                print('======××× 「警告」ソースに違いがあります ×××======')
+
+                if os.path.exists(r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\log\\diff_errro_log.txt'):
+                    File_Append(LOG_DIR + 'diff_errro_log.txt',
+                                diff_data + '\n')
+                    diff_Flg = False
+                else:
+                    File_Write(LOG_DIR + 'diff_errro_log.txt',
+                               diff_data + '\n')
+                    diff_Flg = False
+            else:
+                print('○○○○○○○○○○○「OK」ソース比較 OK です。一致しています。 ○○○○○○○○○○○')
+
+        # === メール送信処理
+        if diff_Flg:
+            pass
+        else:
+            # ======　ソースが合ってなかったら、メール送信
+            # === 送受信先
+            Send_obj = Send_Mail('jimnet.co.jp', '587', 'natsume@jimnet.co.jp',
+                                 '', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
+
+            Send_obj.Send_Mail_To(self.file_02)
+
+        diff_file01.close()
+        diff_file02.close()
+
+
+# ================== 比較用 オブジェクト生成
+# === index.txt 比較
+Diff_Obj_01 = Diff_File(
+    r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\', r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'index.txt', 'index.txt')
+# HTML ファイル出力
+Diff_Obj_01.Diff_HTML(
+    'D:\\Python_ソース比較_2022\\test_sorce_fire2022\python\\test\output\\', 'index.html')
+
+# ファイル比較
+Diff_Obj_01.Diff_FILE_SendMail()
+
+# === login.txt 比較
+Diff_Obj_02 = Diff_File(r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\',
+                        r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'login.txt', 'login.txt')
+# HTML ファイル出力
+Diff_Obj_02.Diff_HTML(
+    'D:\\Python_ソース比較_2022\\test_sorce_fire2022\python\\test\output\\', 'login.html')
+
+Diff_Obj_02.Diff_FILE_SendMail()

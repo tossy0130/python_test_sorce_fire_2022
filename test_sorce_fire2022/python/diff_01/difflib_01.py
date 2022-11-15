@@ -105,6 +105,8 @@ class Diff_File():
         self.path_02 = path_02  # 比較用 ディレクトリ パス
         self.file_01 = file_01  # 原本　ファイル名
         self.file_02 = file_02  # 比較用　ファイル名
+        
+        
 
     def Diff_HTML(self, output_dir_path, output_file_name):
 
@@ -122,6 +124,7 @@ class Diff_File():
         # ファイル書き込み
         output_create = open(output_path, 'w', encoding="utf-8")
         output_create.writelines(diff.make_file(file1, file2))
+
 
 dir_path = r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\back_up\\'
 
@@ -155,7 +158,7 @@ file2.close()
 output_create.close()
 
 # ====================== 差分のみの抽出  Differ() =======================
-
+# ====== ソース比較ロジック
 file11 = open(file1_p, 'r', encoding="utf-8_sig")
 file22 = open(file2_p, 'r', encoding="utf-8_sig")
 diff_02 = difflib.Differ()
@@ -185,6 +188,8 @@ else:
 
 file11.close()
 file22.close()
+
+# ====================== 差分のみの抽出  Differ() END =======================
 
 # ===================================================================================
 # ================================= ソース比較 END =======================================

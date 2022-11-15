@@ -1,0 +1,10 @@
++ <div id="footer_wrap"><div id="footer_line" class="clearfix"><div id="copyright">Copyright ©&nbsp;2014-2022&nbsp;Jim Computer Service All rights reserved.</div></div></div>
+
+- <div id="footer_wrap"><div id="footer_line" class="clearfix"><div id="copyright">Copyright c&nbsp;2014-2022&nbsp;Jim Computer Service All rights reserved.</div></div></div>
+
++ <div id="footer_wrap"><div id="footer_line" class="clearfix"><div id="copyright">Copyright ©&nbsp;2014-2022&nbsp;Jim Computer Service All rights reserved.</div></div></div>
+
+- <div id="footer_wrap"><div id="footer_line" class="clearfix"><div id="copyright">Copyright c&nbsp;2014-2022&nbsp;Jim Computer Service All rights reserved.</div></div></div>
+
++ <div id="footer_wrap"><div id="footer_line" class="clearfix"><div id="copyright">Copyright ©&nbsp;2014-2022&nbsp;Jim Computer Service All rights reserved.</div></div></div>
+
