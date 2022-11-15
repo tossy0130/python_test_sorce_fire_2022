@@ -72,7 +72,7 @@ Check_handles('//*[@id="cont"]/center/div[1]/iframe')
 # click
 driver.find_element(By.CSS_SELECTOR, "body > div > div.m_item2 > a").click()
 
-time.sleep(1.0)
+time.sleep(0.5)
 
 # ================== 「取扱品」 ====================
 
@@ -83,7 +83,7 @@ Check_handles('//*[@id="cont"]/center/div[2]/iframe')
 driver.find_element(
     By.CSS_SELECTOR, "body > table:nth-child(7) > tbody > tr:nth-child(2) > td:nth-child(1) > a").click()
 
-time.sleep(1.0)
+time.sleep(0.5)
 
 # ================= 「取扱商品 カテゴリー」 =============
 Check_handles('//*[@id="cont"]/center/div[2]/iframe')
