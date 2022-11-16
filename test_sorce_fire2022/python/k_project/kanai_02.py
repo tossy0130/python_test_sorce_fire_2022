@@ -58,6 +58,17 @@ def Selenium_HTML_Print():
     print('html:::' + html)
 
 
+def Clicl_Check_CSS_SELECTOR(Css_Selector):
+    # ========= click チェック
+    if int(len(driver.find_elements(
+            By.CSS_SELECTOR, Css_Selector)) > 0):
+
+        driver.find_elements(
+            By.CSS_SELECTOR, Css_Selector)[0].click()
+    else:
+        print('要素なし')
+
+
 # selenium での　chrome の実行ファイル　指定
 driver = webdriver.Chrome(
     executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')
@@ -78,6 +89,7 @@ Check_handles('//*[@id="cont"]/center/div[2]/iframe')
 driver.find_element(
     By.CSS_SELECTOR, "body > table:nth-child(9) > tbody > tr:nth-child(4) > td:nth-child(1) > a").click()
 
+time.sleep(0.8)
 
 # カテゴリ １１８・ハッカーケース
 Check_handles('//*[@id="cont"]/center/div[2]/iframe')
@@ -87,10 +99,49 @@ driver.find_element(
 
 time.sleep(0.8)
 
+# === 画像パス　取得
 img = driver.find_element(By.TAG_NAME, "img")
 img_src = img.get_attribute('src')
-
 print('画像パス:::' + img_src)
 
+time.sleep(0.8)
+
 # === 戻る
-driver.back()
+
+# ====== タブを移動して、新規タブを閉じる =======
+driver.switch_to.window(driver.window_handles[1])
+driver.close()
+
+time.sleep(0.8)
+
+Check_handles('//*[@id="cont"]/center/div[2]/iframe')
+
+# click チェック
+Clicl_Check_CSS_SELECTOR(
+    'body > table:nth-child(6) > tbody > tr:nth-child(32) > td:nth-child(1) > a')
+
+# driver.find_element(
+#    By.CSS_SELECTOR, "body > table:nth-child(6) > tbody > tr:nth-child(32) > td:nth-child(1) > a").click()
+
+time.sleep(0.8)
+
+# === 画像パス　取得
+img = driver.find_element(By.TAG_NAME, "img")
+img_src = img.get_attribute('src')
+print('画像パス:::' + img_src)
+
+time.sleep(0.8)
+
+# ====== タブを移動して、新規タブを閉じる =======
+driver.switch_to.window(driver.window_handles[1])
+driver.close()
+
+time.sleep(0.8)
+
+Check_handles('//*[@id="cont"]/center/div[2]/iframe')
+
+# click チェック
+Clicl_Check_CSS_SELECTOR(
+    'body > table:nth-child(6) > tbody > tr:nth-child(32) > td:nth-child(2) > a')
+
+time.sleep(0.8)
