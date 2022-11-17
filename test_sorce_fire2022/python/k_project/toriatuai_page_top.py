@@ -37,6 +37,8 @@ import difflib
 import os
 
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 def Check_handles(x_path):
@@ -58,7 +60,30 @@ def Check_handles(x_path):
 # webManager 使用
 driver = webdriver.Chrome(ChromeDriverManager().install())
 
+""" 
+options = Options()
+options.add_argument('--headless')
+options.add_argument('--disable-gpu')
+options.add_argument('--no-sandbox')
+
+capabilities = DesiredCapabilities.CHROME.copy()
+capabilities['acceptInsecureCerts'] = True
+
+driver = webdriver.Chrome(chrome_options=options,
+                          desired_capabilities=capabilities, executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')
+"""
+
 driver.get("https://toriatsukai.kanai-marukin.com/")
+
+time.sleep(1.5)
+
+set_btn = driver.find_element(By.ID, "details-button").click()
+
+time.sleep(0.6)
+
+set_btn_02 = driver.find_element(By.ID, "proceed-link").click()
+
+time.sleep(0.6)
 
 # === 実行
 Check_handles('//*[@id="cont"]/center/div[1]/iframe')
