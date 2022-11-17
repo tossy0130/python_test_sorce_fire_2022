@@ -7,8 +7,8 @@ import pandas as pd
 try:
     # === 接続
     connector = psycopg2.connect('postgresql://{user}:{password}@{host}:{port}/{dbname}'.format(
-        user="postgres",  # ユーザ
-        password="jim",  # パスワード
+        user="ユーザー",  # ユーザ
+        password="パス",  # パスワード
         host="localhost",  # ホスト名
         port="5432",  # ポート
         dbname="postgres"))  # データベース名
