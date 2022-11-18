@@ -3,7 +3,7 @@ from psycopg2 import Error
 from psycopg2.extras import DictCursor
 import pandas as pd
 
-
+# ========================= ポスグレ　接続 ========================
 try:
     # === 接続
     connector = psycopg2.connect('postgresql://{user}:{password}@{host}:{port}/{dbname}'.format(
