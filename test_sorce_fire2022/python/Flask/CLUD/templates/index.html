@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title>Flask CLUD</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+    </head>
+    <body>
+
+        {% extends "application.html" %}
+
+        {% block content %}
+            <h1>投稿一覧</h1>
+
+        <p><a href="/new">新規登録画面</a></p>
+
+        {% for post_val in get_posts %}
+
+        <div>
+            <p>{{ post_val.id }}: {{ post_val.title }}</p>
+            <p>{{ post_val.body }}</p>
+            <p><a href="{{ post_val.id }}/edit">編集</a></p>
+        </div>
+
+        {% endfor %}
+
+        {% endblock %}
+    
+    </body>
+</html>

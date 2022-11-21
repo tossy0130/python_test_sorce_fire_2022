@@ -1,0 +1,19 @@
+{% extends "application.html" %}
+
+{% block content %}
+
+<h1>新規登録</h1>
+
+<form method="post">
+
+    <label for="title">題名</label>
+    <input type="text" name="title">
+
+    <label for="body">本文</label>
+    <input type="text" name="body">
+
+    <input type="submit" value="新規登録">
+
+</form>
+
+{% endblock %}

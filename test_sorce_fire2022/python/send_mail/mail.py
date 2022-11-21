@@ -78,7 +78,7 @@ class Send_Mail():
         # デバッガ
         # server.set_debuglevel(True)
         # === 送受信先
-Send_obj = Send_Mail('jimnet.co.jp', 'port', 'natsume@jimnet.co.jp',
-                     'パスワード', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
+Send_obj = Send_Mail('smtp.gmail.com', '587', 'tokotoko33ok@gmail.com',
+                     'bkkrpalfbpgnmrhg', 'tokotoko33ok@gmail.com', 'natsume@jimnet.co.jp')
 
 Send_obj.Send_Mail_To()
