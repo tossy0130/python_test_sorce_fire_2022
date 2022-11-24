@@ -23,7 +23,7 @@ import smtplib
 
 import difflib
 
-
+import sys
 import os
 
 #　元ファイル用 ディレクトリ

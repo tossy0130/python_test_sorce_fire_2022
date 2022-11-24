@@ -23,8 +23,16 @@
             <p><a href="{{ post_val.id }}/edit">編集</a></p>
         </div>
 
+        <div>
+            <a href="{{ post_val.id }}/delete">削除</a>
+        </div>
+
         {% endfor %}
 
+
+        <p>GET記事:::１件:::{{ p_get.id }} : {{ p_get.title }} : {{ p_get.body }}</p>
+        
+        <p>filter::: {{ p02_get.id }} : {{ p02_get.title }} : {{ p02_get.body }}</p>
         {% endblock %}
     
     </body>

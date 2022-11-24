@@ -24,10 +24,18 @@ class Post(db.Model):
 def index():
     # === DB 一覧表示
     get_posts = Post.query.all()
-    return render_template('index.html', get_posts=get_posts)
+
+    # get データ 1つ
+    p_get = Post.query.get(2)
+
+    # filter
+    p02_get = Post.query.filter(Post.title == 'test_003')
+
+    return render_template('index.html', get_posts=get_posts, p_get=p_get,
+                           p02_get=p02_get)
 
 
-# ====== 新規登録
+# ====== 新規登録 ======
 @app.route('/new', methods=['GET', 'POST'])
 def create():
     if request.method == 'POST':
@@ -47,7 +55,7 @@ def create():
         # GET
         return render_template('new.html')
 
-# ====== 編集画面
+# ====== 編集画面 ======
 
 # === GET でアクセスの場合、編集画面を表示
 # === POST 送信がきた場合は、編集を行う
@@ -55,6 +63,8 @@ def create():
 
 @app.route('/<int:id>/edit', methods=['GET', 'POST'])
 def update_item(id):
+
+    # Post テーブルから id 取得
     post = Post.query.get(id)
     # === 編集画面を表示
     if request.method == 'GET':
@@ -65,6 +75,23 @@ def update_item(id):
         post.body = request.form.get('body')
         db.session.commit()
         return redirect('/')
+
+# ====== 削除処理 ======
+
+
+@app.route('/<int:id>/delete', methods=['GET'])
+def delete(id):
+    # Post テーブルから id 取得
+    post = Post.query.get(id)
+
+    # 投稿を削除
+    db.session.delete(post)
+
+    # 削除を反映
+    db.session.commit()
+
+    # index ページへリダイレクト
+    return redirect('/')
 
 
 if __name__ == '__main__':
