@@ -36,6 +36,73 @@ LOG_DIR = 'python/test/log/'
 URL_ARR = []
 
 
+# === view_list.php
+def Create_File_view_list(url, file_name):
+
+    # # === 時刻取得
+    yoyakubi_date = driver.find_element(
+        By.CSS_SELECTOR, "#form1 > table:nth-child(4) > tbody > tr:nth-child(1) > td")
+
+    name_yoyakubi_date = driver.find_element(
+        By.NAME, "yoyakubi_date")
+
+    yoyakubi_date_val = name_yoyakubi_date.get_attribute("value")
+
+    renban = driver.find_element(
+        By.CSS_SELECTOR, "#form1 > table:nth-child(4) > tbody > tr:nth-child(2) > td")
+
+    # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
+    get_url = url
+
+    html_text = driver.page_source  # selenium
+
+    # === ファイルが存在していなかったら、原本ファイル作成
+    # ファイル存在チェック
+    if os.path.exists(DIR_PATH + file_name):  # python/test/back_up
+        # === ファイルが存在していたら、比較用　ファイル作成
+        File_Write(DIR_PATH_HIKAKU + file_name, html_text)  # ファイル書き込み関数
+
+        # ====== value を空にする =======
+        with open(DIR_PATH_HIKAKU + file_name, encoding='utf-8') as f:
+            data_lines = f.read()
+
+            # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
+            data_lines = data_lines.replace(yoyakubi_date.text, '')
+            data_lines = data_lines.replace(renban.text, '')
+
+            # name = yoyakubi_data の value を空にする
+            data_lines = data_lines.replace(
+                "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
+
+            # data_lines = data_lines.replace('Changed', '変更')
+            # data_lines = data_lines.replace('Deleted', '削除')
+
+        with open(DIR_PATH_HIKAKU + file_name, mode='w', encoding='utf-8') as f:
+            f.write(data_lines)
+
+    else:
+        # === ファイルが存在していなかったら、原本ファイル作成
+        File_Write(DIR_PATH + file_name, html_text)  # ファイル書き込み関数
+
+        # ====== value を空にする =======
+        with open(DIR_PATH + file_name, encoding='utf-8') as f:
+            data_lines = f.read()
+
+            # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
+            data_lines = data_lines.replace(yoyakubi_date.text, '')
+            data_lines = data_lines.replace(renban.text, '')
+
+            # name = yoyakubi_data の value を空にする
+            data_lines = data_lines.replace(
+                "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
+
+            # data_lines = data_lines.replace('Changed', '変更')
+            # data_lines = data_lines.replace('Deleted', '削除')
+
+        with open(DIR_PATH + file_name, mode='w', encoding='utf-8') as f:
+            f.write(data_lines)
+
+
 # === reserve_edit.php での「データクレンジング」
 # 火葬予約日時 name（yoyakubi_date）, 火葬受付番号 name（renban） を空にする
 def Create_File_02_TEST(url, file_name):
@@ -43,18 +110,33 @@ def Create_File_02_TEST(url, file_name):
     # # === 時刻取得
     yoyakubi_date = driver.find_element(
         By.CSS_SELECTOR, "#form1 > table:nth-child(4) > tbody > tr:nth-child(1) > td")
-    print('yoyakubi_date :::' + yoyakubi_date.text)
 
     name_yoyakubi_date = driver.find_element(
         By.NAME, "yoyakubi_date")
 
     yoyakubi_date_val = name_yoyakubi_date.get_attribute("value")
-    print('yoyakubi_date_val:::' + str(yoyakubi_date_val))
 
     renban = driver.find_element(
         By.CSS_SELECTOR, "#form1 > table:nth-child(4) > tbody > tr:nth-child(2) > td")
 
-    print('renban :::' + renban.text)
+    # ========= reserve_edit.php
+
+    # transactionid
+
+    r_edit_00 = driver.find_element(
+        By.XPATH, "//*[@id='form1']/input[1]")
+
+    r_edit_01 = driver.find_element(
+        By.XPATH, "//*[@id='form1']/input[1]")
+    r_edit_02 = driver.find_element(
+        By.XPATH, "//*[@id='form1']/input[2]")
+
+    r_edit_03 = driver.find_element(
+        By.XPATH, "//*[@id='form1']/table[1]/tbody/tr[3]/td/input[1]")
+    r_edit_04 = driver.find_element(
+        By.XPATH, "//*[@id='form1']/table[1]/tbody/tr[3]/td/input[2]")
+
+    # ========= reserve_confirm.php
 
     # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
     get_url = url
@@ -611,7 +693,7 @@ class Diff_File():
         diff_file02.close()
 
 
-# ================== 比較用 オブジェクト生成
+# ================== 比較用 オブジェクト生成 ==================
 # === index.txt 比較
 Diff_Obj_01 = Diff_File(
     r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\', r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'index.txt', 'index.txt')
@@ -622,6 +704,8 @@ Diff_Obj_01.Diff_HTML(
 # ファイル比較
 Diff_Obj_01.Diff_FILE_SendMail()
 
+# ================================================
+
 # === login.txt 比較
 Diff_Obj_02 = Diff_File(r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\',
                         r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'login.txt', 'login.txt')
@@ -630,3 +714,47 @@ Diff_Obj_02.Diff_HTML(
     'D:\\Python_ソース比較_2022\\test_sorce_fire2022\python\\test\output\\', 'login.html')
 
 Diff_Obj_02.Diff_FILE_SendMail()
+
+# ================================================
+
+# === view_list.txt 比較
+Diff_Obj_03 = Diff_File(r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\',
+                        r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'view_list.txt', 'view_list.txt')
+# HTML ファイル出力
+Diff_Obj_03.Diff_HTML(
+    'D:\\Python_ソース比較_2022\\test_sorce_fire2022\python\\test\output\\', 'view_list.html')
+
+Diff_Obj_03.Diff_FILE_SendMail()
+
+# ================================================
+
+# === reserve_list.txt 比較
+Diff_Obj_03 = Diff_File(r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\',
+                        r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'reserve_list.txt', 'reserve_list.txt')
+# HTML ファイル出力
+Diff_Obj_03.Diff_HTML(
+    'D:\\Python_ソース比較_2022\\test_sorce_fire2022\python\\test\output\\', 'reserve_list.html')
+
+Diff_Obj_03.Diff_FILE_SendMail()
+
+# ================================================
+
+# === reserve_edit.txt 比較
+Diff_Obj_04 = Diff_File(r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\',
+                        r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'reserve_edit.txt', 'reserve_edit.txt')
+# HTML ファイル出力
+Diff_Obj_04.Diff_HTML(
+    'D:\\Python_ソース比較_2022\\test_sorce_fire2022\python\\test\output\\', 'reserve_edit.html')
+
+Diff_Obj_04.Diff_FILE_SendMail()
+
+# ================================================
+
+# === reserve_confirm.txt 比較
+Diff_Obj_05 = Diff_File(r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up\\',
+                        r'D:\\Python_ソース比較_2022\\test_sorce_fire2022\\python\\test\\back_up02\\', 'reserve_confirm.txt', 'reserve_confirm.txt')
+# HTML ファイル出力
+Diff_Obj_05.Diff_HTML(
+    'D:\\Python_ソース比較_2022\\test_sorce_fire2022\python\\test\output\\', 'reserve_confirm.html')
+
+Diff_Obj_05.Diff_FILE_SendMail()
