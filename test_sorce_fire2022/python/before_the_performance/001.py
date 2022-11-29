@@ -245,8 +245,8 @@ pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
 user_id.clear()
 pass_word.clear()
 
-user_id.send_keys("jimcom35")  # name 属性に値をセット
-pass_word.send_keys("Jim357221")  # name 属性に値をセット
+user_id.send_keys("")  # name 属性に値をセット
+pass_word.send_keys("")  # name 属性に値をセット
 
 user_id.submit()  # form を submit する。
 

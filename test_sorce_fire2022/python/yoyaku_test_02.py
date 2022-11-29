@@ -446,8 +446,8 @@ pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
 user_id.clear()
 pass_word.clear()
 
-user_id.send_keys("jimcom35")  # name 属性に値をセット
-pass_word.send_keys("Jim357221")  # name 属性に値をセット
+user_id.send_keys("")  # name 属性に値をセット
+pass_word.send_keys("")  # name 属性に値をセット
 
 user_id.submit()  # form を submit する。
 
@@ -685,7 +685,7 @@ class Diff_File():
             # ======　ソースが合ってなかったら、メール送信
             # === 送受信先
             Send_obj = Send_Mail('jimnet.co.jp', '587', 'natsume@jimnet.co.jp',
-                                 'ydvH28#B', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
+                                 '', 'natsume@jimnet.co.jp', 'tokotoko33ok@gmail.com')
 
             Send_obj.Send_Mail_To(self.file_02)
 

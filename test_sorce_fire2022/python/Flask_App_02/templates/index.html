@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+    </head>
+    <body>
+
+        <h2>Flask Ajax 通信</h2>
+
+        <input type="text" id="user_name">
+
+        <button id="check">確認</button>
+        <button id="register">登録</button>
+
+        <p id="message"></p>
+
+     
+
+
+<script>
+
+    // === 確認 ボタン
+    document.getElementById('check').onclick = function () {
+        check();
+    }
+
+    // === 登録ボタン
+    document.getElementById('register').onclick = function () {
+            register();
+        }
+
+
+    // ====== 確認ボタンを押したら
+    function check()
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200)
+            {
+                document.getElementById('message').innerHTML = this.responseText;
+            }
+        };
+
+        const user_name = document.getElementById('user_name').value;
+
+        xhttp.open("GET", `http://127.0.0.1:5000/?name=${user_name}`, true)
+        xhttp.send();
+    }
+
+    // ====== 登録ボタンを押したら
+    function register()
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange == function() 
+        {
+            if(this.readyState == 4 && this.status == 200)
+            {
+                document.getElementById('message').innerHTML = this.responseText;
+            }
+        };
+        const user_name = document.getElementById('user_name').value;
+        // === POST 送信
+        xhttp.open("POST", "http://127.0.0.1:5000/", true);
+        // POST 送信は URLにパラメータを載せないので、以下のようにやる
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(`name=${user_name}`);
+    }
+
+</script>
+    
+    </body>
+</html>
