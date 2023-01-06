@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+    越谷市斎場予約システム
+</title>
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css"><meta name="author" content="oriental.co.jp"><meta name="keywords" content="oriental.co.jp">
+<link rel="stylesheet" href="/kdemo/css/pc/import.css" type="text/css" media="all">
+<script type="text/javascript" src="/kdemo/js/pc/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="/kdemo/js/pc/main.js"></script>
+<script type="text/javascript">//<![CDATA[
+    
+    $(function(){
+        var str = String.fromCharCode(111,114,105,101,110,116,97,108, 46,99,111, 46,106,112); 
+$('meta:last').after('<meta name="author" content="' + str + '" />'); 
+$('meta:last').after('<meta name="keywords" content="' + str + '" />'); 
+
+    });
+//]]></script>
+</head><!-- ▼BODY部 スタート -->
+<body class="frame_outer"><noscript><p>JavaScript を有効にしてご利用下さい.</p></noscript><div id="header"><!--▼HEADER-->
+<div id="header_wrap"><div id="header_line"><a href="https://192.168.254.204/kdemo/index.php">越谷市斎場予約システム</a></div></div><!--/#header_wrap-->
+<!--▲HEADER-->
+</div><div id="main"><span class="strong"></span><br><!--★★検索結果一覧★★--><form name="form1" id="form1" method="post" action="?"><input type="hidden" name="transactionid" value=""><input type="hidden" name="mode" value=""><input type="hidden" name="UKE_NEND" value=""><input type="hidden" name="UKE_NO" value=""><input type="hidden" name="YOYAKUBI_STRING" value=""><input type="hidden" name="YOYAKUBI" value=""><input type="hidden" name="WAKU_NO" value=""><input type="hidden" name="shiki_type" value=""><div class="btn"><a class="btn_default" href="javascript:;" onclick="main.setModeAndSubmit('form1', 'view_list'); return false;">空き状況確認</a><a class="btn_default" href="javascript:;" onclick="main.setModeAndSubmit('form1', 'reload'); return false;">最新状況に更新</a><a class="btn_default" href="javascript:;" onclick="main.setModeAndSubmit('form1', 'password_edit'); return false;">パスワード変更</a><a class="btn_default" href="javascript:;" onclick="main.setModeAndSubmit('form1', 'logout'); return false;">ログアウト</a></div></form><span class="alignL strong underline clearfix">ジム・コンピュータ・サービス　様</span><table class="list"><colgroup><col width="5%"><col width="18%"><col width="15%"><col width="10%"><col width="12%"><col width="8%"><col width="12%"><col width="8%"><col width="10%"><col width="2%"></colgroup><tbody><tr><th class="alignC">No.</th><th class="alignL">死亡者名</th><th class="alignL">火葬予約日時</th><th class="alignC">待合室</th><th class="alignC">式場利用</th><th class="alignC">通夜</th><th class="alignC">霊安室</th><th class="alignC">担当者</th><th class="alignC">使用許可申請書</th><th class="alignC">分骨<br>申請書</th></tr><tr><td class="alignL">1</td><td class="alignL"><a href="javascript:;" onclick="main.set6KeyAndSubmit('form1', 'reserve_edit', 'UKE_NEND', '2022', 'UKE_NO', '1046',  'YOYAKUBI_STRING', '01月11日(水) 14時', 'YOYAKUBI', '23-01-11', 'shiki_type', '0', 'WAKU_NO', '6'); return false;">20230111-001:加藤清正</a></td><td class="alignL">01月11日(水) 14時</td><td class="alignL">1室利用</td><td class="alignL">利用しない</td><td class="alignL">無</td><td class="alignL">利用しない</td><td class="alignL">JIM</td><td class="alignC"><a class="btn_default" style="color: #ccc; background-color: #fff; border-color: #ccc">PDF</a></td><td class="alignC"><a class="btn_default" style="color: #ccc; background-color: #fff; border-color: #ccc">PDF</a></td></tr><tr><td class="alignL">2</td><td class="alignL"><a href="javascript:;" onclick="main.set6KeyAndSubmit('form1', 'reserve_edit', 'UKE_NEND', '2022', 'UKE_NO', '958',  'YOYAKUBI_STRING', '11月17日(木) 11時', 'YOYAKUBI', '22-11-17', 'shiki_type', '1', 'WAKU_NO', '1'); return false;">20221117-001:身体の一部(ジム太郎)</a></td><td class="alignL">11月17日(木) 11時</td><td class="alignL">1室利用</td><td class="alignL">17日 10:00</td><td class="alignL">16日 17:30</td><td class="alignL">利用しない</td><td class="alignL">JIM</td><td class="alignC"><a class="btn_default" style="color: #ccc; background-color: #fff; border-color: #ccc">PDF</a></td><td class="alignC"><a class="btn_default" style="color: #ccc; background-color: #fff; border-color: #ccc">PDF</a></td></tr></tbody></table><span class="strong">注記）　予約情報の編集は施設利用の前日まで行えます。当日の編集はできません。</span><br></div><div id="footer">
+<!--▼FOOTER-->
+<div id="footer_wrap"><div id="footer_line" class="clearfix"><div id="copyright">Copyright ©&nbsp;2014-2023&nbsp;Jim Computer Service All rights reserved.</div></div></div>
+<!--▲FOOTER--></div>
+
+</body><!-- ▲BODY部 エンド --></html>
