@@ -12,7 +12,6 @@ import time
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 
 from smtplib import SMTP
 from email.mime.text import MIMEText
@@ -27,11 +26,6 @@ import difflib
 import sys
 import os
 
-from selenium.webdriver.chrome import service as fs
-from selenium.webdriver.common.by import By
-import chromedriver_binary
-from webdriver_manager.chrome import ChromeDriverManager
-
 #　元ファイル用 ディレクトリ
 DIR_PATH = 'python/test/back_up/'
 # 比較ファイル用 ディレクトリ
@@ -39,10 +33,17 @@ DIR_PATH_HIKAKU = 'python/test/back_up02/'
 
 LOG_DIR = 'python/test/log/'
 
+# ================= ファイル削除用　テスト
+DIR_PATH_TEST = 'python/hikaku_file_test/back_up/'
+DIR_PATH_TEST_HIKAKU = 'python/hikaku_file_test/back_up02/'
+
 URL_ARR = []
 
-
+# =================================================
 # === view_list.php
+# =================================================
+
+
 def Create_File_view_list(url, file_name):
 
     # # === 時刻取得
@@ -106,6 +107,107 @@ def Create_File_view_list(url, file_name):
             # data_lines = data_lines.replace('Deleted', '削除')
 
         with open(DIR_PATH + file_name, mode='w', encoding='utf-8') as f:
+            f.write(data_lines)
+
+
+# =================================================
+# === reserve_list.php
+# =================================================
+def Create_File_reserve_list(url, file_name):
+
+    # === 時刻取得
+    yoyakubi_date = driver.find_element(
+        By.XPATH, "//*[@id='main']/span[1]")
+
+    GET_resv_arr_01 = []
+    idx = 2
+    while(True):
+
+        try:
+            # ============ 死亡者リスト
+            r_person_01 = driver.find_element(
+                By.XPATH, "//*[@id = 'main']/table/tbody/tr[" +
+                str(idx) + "]"
+            )
+
+            print('r_person_01 ===========' + r_person_01.text)
+
+            # ====== 死亡者リスト　の判定
+            if r_person_01.text == '':
+                print('死亡者リストは空 ********** 空 *********')
+                return False
+            else:
+                print('死亡者リストあり　★★★★★ あり ★★★★★')
+
+                print('r_person_01 ==========' + r_person_01.text)
+
+                arr_tmp = list(r_person_01.text.split(' '))
+                print('arr_tmp:::出力')
+                print(arr_tmp)
+                GET_resv_arr_01.append(arr_tmp)
+
+                print('GET_resv_arr_01[0][0]:::' + GET_resv_arr_01[0][0])
+
+                for val in GET_resv_arr_01:
+                    print('２次元配列出力:::')
+                    print(*val)
+
+                idx += 1
+
+        except:
+            # 存在しない
+            return False
+
+    # === 現在のURL
+    get_url = url
+
+    # ===
+    html_text = driver.page_source  # selenium
+
+    # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
+
+    # === ファイルが存在していなかったら、原本ファイル作成
+    # ファイル存在チェック
+    if os.path.exists(DIR_PATH_TEST + file_name):  # python/test/back_up
+        # === ファイルが存在していたら、比較用　ファイル作成
+        File_Write(DIR_PATH_TEST_HIKAKU + file_name, html_text)  # ファイル書き込み関数
+
+        # ====== value を空にする =======
+        with open(DIR_PATH_TEST_HIKAKU + file_name, encoding='utf-8') as f:
+            data_lines = f.read()
+
+            # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
+            data_lines = data_lines.replace(yoyakubi_date.text, '')
+
+            # name = yoyakubi_data の value を空にする
+            # data_lines = data_lines.replace(
+            #    "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
+
+            # data_lines = data_lines.replace('Changed', '変更')
+            # data_lines = data_lines.replace('Deleted', '削除')
+
+        with open(DIR_PATH_TEST_HIKAKU + file_name, mode='w', encoding='utf-8') as f:
+            f.write(data_lines)
+
+    else:
+        # === ファイルが存在していなかったら、原本ファイル作成
+        File_Write(DIR_PATH_TEST + file_name, html_text)  # ファイル書き込み関数
+
+        # ====== value を空にする =======
+        with open(DIR_PATH_TEST + file_name, encoding='utf-8') as f:
+            data_lines = f.read()
+
+            # 2022年11月9日(水) 19:35現在の空き状況 => 空にする
+            data_lines = data_lines.replace(yoyakubi_date.text, '')
+
+            # name = yoyakubi_data の value を空にする
+            # data_lines = data_lines.replace(
+            #    "value=\"" + str(yoyakubi_date_val) + "\"" + ">", "value=\"\"")
+
+            # data_lines = data_lines.replace('Changed', '変更')
+            # data_lines = data_lines.replace('Deleted', '削除')
+
+        with open(DIR_PATH_TEST + file_name, mode='w', encoding='utf-8') as f:
             f.write(data_lines)
 
 
@@ -304,12 +406,6 @@ def Set_Name_Val(name, set_val):
     tmp_name = driver.find_element(By.NAME, name)  # name 属性取得
     tmp_name.clear()
     tmp_name.send_keys(set_val)  # name 属性に値をセット
-    
-def Set_Name_Val_Select(name, idx):
-    # === name に値を入れる
-    tmp_name = driver.find_element(By.NAME, name)  # name 属性取得
-    tmp_name.clear()
-    tmp_name.select_by_index(idx)  # name 属性に値をセット
 
 
 def Sub_Mit(name):
@@ -404,35 +500,22 @@ def Print_NamiNami():
           "=========================================================" + '\n' +
           "=========================================================")
 
-# ========================================================
-# ========================================================
-# ======================= 作業 Start =====================
-# ========================================================
-# ========================================================
 
+# ======================= 作業 Start ======================
 
 # === ディレクトリ作成
 Check_Dir(DIR_PATH)  # 原本 ディレクトリ
 Check_Dir(DIR_PATH_HIKAKU)  # 比較用 ディレクトリ
 Check_Dir(LOG_DIR)  # エラー時、log.txt 格納用　ディレクトリ
 
+# === reseve_list.html　用　テストディレクトリ
+Check_Dir(DIR_PATH_TEST)
+Check_Dir(DIR_PATH_TEST_HIKAKU)
+
 
 # selenium での　chrome の実行ファイル　指定
-
-# === 開き方 01
-# driver = webdriver.Chrome(
-#   executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')
-
-# === 開き方 02
-# driver = webdriver.Chrome()
-
-# === 開き方 03
-# ドライバー指定でChromeブラウザを開く
-#CHROMEDRIVER = 'C:\\chromedriver_win32\\chromedriver.exe'
-#chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-#driver = webdriver.Chrome(service=chrome_service)
-
-driver = webdriver.Chrome(ChromeDriverManager().install())
+driver = webdriver.Chrome(
+    executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')
 
 driver.get("https://192.168.254.204/kdemo/index.php")
 
@@ -475,8 +558,8 @@ pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
 user_id.clear()
 pass_word.clear()
 
-user_id.send_keys("")  # name 属性に値をセット
-pass_word.send_keys("")  # name 属性に値をセット
+user_id.send_keys("jimcom35")  # name 属性に値をセット
+pass_word.send_keys("Jim357221")  # name 属性に値をセット
 
 user_id.submit()  # form を submit する。
 
@@ -508,7 +591,11 @@ time.sleep(4.6)
 
 print('カレントURL_5 reserve_list :::' + driver.current_url)
 
+
 GET_Scraping_Requests(driver.current_url, 'reserve_list.txt')
+
+# === 原本ファイル　、比較ファイル作成
+Create_File_reserve_list(driver.current_url, 'reserve_list.txt')
 
 html4 = driver.page_source
 print('html4:::' + html4)
