@@ -4,7 +4,6 @@ from genericpath import isfile
 from importlib.resources import path
 from opcode import opname
 
-import requests
 from bs4 import BeautifulSoup, BeautifulStoneSoup
 
 from selenium import webdriver
@@ -32,7 +31,8 @@ from selenium.webdriver.common.by import By
 import chromedriver_binary
 from webdriver_manager.chrome import ChromeDriverManager
 
-#　元ファイル用 ディレクトリ
+
+# 　元ファイル用 ディレクトリ
 DIR_PATH = 'python/test/back_up/'
 # 比較ファイル用 ディレクトリ
 DIR_PATH_HIKAKU = 'python/test/back_up02/'
@@ -201,7 +201,7 @@ def Check_Dir(path):
     d_path = path
 
     try:
-        if(os.path.isdir(d_path)):  # フォルダが存在していた場合
+        if (os.path.isdir(d_path)):  # フォルダが存在していた場合
             pass
         else:
             os.makedirs(d_path)
@@ -212,10 +212,6 @@ def Check_Dir(path):
 def GET_Scraping_Requests(url, file_name):
     # ================== URL から、 原本 HTMLファイル、 比較用 HTMLファイル作成
     get_url = url
-
-   # =========== BeautifulSoup
-   # response = requests.get(get_url, verify=False)
-   # html_text = BeautifulSoup(response.text, 'html.parser')
 
     html_text = driver.page_source  # selenium
     # html_text = BeautifulSoup(response.text, 'lxml')
@@ -252,7 +248,7 @@ def Check_Dir(path):
     d_path = path
 
     try:
-        if(os.path.isdir(d_path)):  # フォルダが存在していた場合
+        if (os.path.isdir(d_path)):  # フォルダが存在していた場合
             pass
         else:
             os.makedirs(d_path)
@@ -304,7 +300,8 @@ def Set_Name_Val(name, set_val):
     tmp_name = driver.find_element(By.NAME, name)  # name 属性取得
     tmp_name.clear()
     tmp_name.send_keys(set_val)  # name 属性に値をセット
-    
+
+
 def Set_Name_Val_Select(name, idx):
     # === name に値を入れる
     tmp_name = driver.find_element(By.NAME, name)  # name 属性取得
@@ -420,19 +417,21 @@ Check_Dir(LOG_DIR)  # エラー時、log.txt 格納用　ディレクトリ
 # selenium での　chrome の実行ファイル　指定
 
 # === 開き方 01
-# driver = webdriver.Chrome(
-#   executable_path=r'C:\\chromedriver_win32\\chromedriver.exe')
+# driver_path = r'C:\\chromedriver_win32\\chromedriver.exe'
+# driver = webdriver.Chrome(executable_path=driver_path)
+
 
 # === 開き方 02
-# driver = webdriver.Chrome()
+driver = webdriver.Chrome()
 
 # === 開き方 03
 # ドライバー指定でChromeブラウザを開く
-#CHROMEDRIVER = 'C:\\chromedriver_win32\\chromedriver.exe'
-#chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-#driver = webdriver.Chrome(service=chrome_service)
+# CHROMEDRIVER = 'C:\\chromedriver_win32\\chromedriver.exe'
+# chrome_service = fs.Service(executable_path=CHROMEDRIVER)
+# driver = webdriver.Chrome(service=chrome_service)
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
+# === 開き方 04
+# driver = webdriver.Chrome(ChromeDriverManager().install())
 
 driver.get("https://192.168.254.204/kdemo/index.php")
 
@@ -475,8 +474,8 @@ pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
 user_id.clear()
 pass_word.clear()
 
-user_id.send_keys("")  # name 属性に値をセット
-pass_word.send_keys("")  # name 属性に値をセット
+user_id.send_keys("jimcom35")  # name 属性に値をセット
+pass_word.send_keys("jim357221")  # name 属性に値をセット
 
 user_id.submit()  # form を submit する。
 
@@ -555,13 +554,15 @@ g_date = Date_Obj.Date_cut(k_date)
 
 # ========= 枠ナンバー ＆　時間　指定  ===========
 
-t_time_0 = Date_Obj.Yoyaku_Time_idx(6, 0)  # 7
-t_time_1 = Date_Obj.Yoyaku_Time_idx(6, 1)  # 例：15:00
+# パラメーターで 予約枠の時間と、 枠番号を指定
+t_time_0 = Date_Obj.Yoyaku_Time_idx(1, 0)  # 7
+t_time_1 = Date_Obj.Yoyaku_Time_idx(1, 1)  # 例：15:00
 # print(t_time_0 + ':::出力')
 # print(t_time_1 + ':::出力')
 
 # === 当日日付けを、10日プラスして、str に変えて s_data_add に格納
-date_add = Date_Obj.Date_Add(10)
+# 日付指定　　
+date_add = Date_Obj.Date_Add(9)  # ********* パラメータ日後 *********
 s_date_add = Date_Obj.Date_cut(date_add)
 print('s_date_add:::' + s_date_add)
 

@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>
+    越谷市斎場予約システム
+</title>
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css"><meta name="author" content="oriental.co.jp"><meta name="keywords" content="oriental.co.jp">
+<link rel="stylesheet" href="/kdemo/css/pc/import.css" type="text/css" media="all">
+<script type="text/javascript" src="/kdemo/js/pc/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="/kdemo/js/pc/main.js"></script>
+<script type="text/javascript">//<![CDATA[
+    
+    $(function(){
+        var str = String.fromCharCode(111,114,105,101,110,116,97,108, 46,99,111, 46,106,112); 
+$('meta:last').after('<meta name="author" content="' + str + '" />'); 
+$('meta:last').after('<meta name="keywords" content="' + str + '" />'); 
+
+    });
+//]]></script>
+<style>#notice {}#notice_01 {display: inline-block;text-decoration: underline;}#notice_02 {display: inline-block;text-decoration: underline;padding: 0 5px;}</style></head><!-- ▼BODY部 スタート -->
+<body class="frame_outer"><noscript><p>JavaScript を有効にしてご利用下さい.</p></noscript><div id="header"><!--▼HEADER-->
+<div id="header_wrap"><div id="header_line"><a href="https://192.168.254.204/kdemo/index.php">越谷市斎場予約システム</a></div></div><!--/#header_wrap-->
+<!--▲HEADER-->
+</div><div id="main"><div id="home_image"><img src="/kdemo/img/pc/common/SaijyoHome.jpg" width="53%" heigth="auto"></div><div id="home_form"><form name="form1" id="form1" method="post" action="?"><input type="hidden" name="transactionid" value=""><input type="hidden" name="mode" value=""><div class="btn_area"><ul><li>オンライン予約はこちらから</li><li><a class="btn_default" href="javascript:;" onclick="main.setModeAndSubmit('form1', 'view_list'); return false;"><span>空き状況の確認</span></a></li><li><a class="btn_default" href="javascript:;" onclick="main.setModeAndSubmit('form1', 'reserve_list'); return false;"><span>予約状況の確認</span></a></li></ul></div><div class="alignL" style="margin-left: 110px;">・ご利用の手引き：システムの詳細な操作方法は<a href="manual.pdf" target="_blank"><span>こちら</span></a>からダウンロードできます。</div><div class="alignL" style="margin-left: 110px;">・新型コロナウィルスにより亡くなられた方のご遺体の火葬等の取り扱いについて<a href="お知らせ20230508.pdf" target="_blank" id="notice_02"><span>（お知らせ）</span></a></div><div class="alignL" style="margin-left: 110px;">・残骨灰の取り扱いについて<a href="お知らせ20240321.pdf" target="_blank" id="notice_02"><span>（お知らせ）</span></a></div></form></div><div id="home_info"></div></div><div id="footer">
+<!--▼FOOTER-->
+<div id="footer_wrap"><div id="footer_line" class="clearfix"><div id="copyright">Copyright ©&nbsp;2014-2024&nbsp;Jim Computer Service All rights reserved.</div></div></div>
+<!--▲FOOTER--></div>
+
+</body><!-- ▲BODY部 エンド --></html>

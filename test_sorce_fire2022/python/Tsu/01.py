@@ -159,7 +159,7 @@ driver.find_element(By.XPATH,
 # ===================================
 time.sleep(1.0)
 
-# === スクレイピング処理 実行
+# === スクレイピング処理 実行 & ログファイル　出力
 GET_Scraping_Requests(driver.current_url, 'view_list.php')
 
 driver.find_element(By.XPATH,
@@ -169,20 +169,28 @@ driver.find_element(By.XPATH,
 # ===================== login.php
 # ===================================
 time.sleep(1.0)
+
+# === スクレイピング処理 実行 & ログファイル　出力
+GET_Scraping_Requests(driver.current_url, 'login.php')
+
 user_id = driver.find_element(By.NAME, "user_id")  # name 属性取得
 pass_word = driver.find_element(By.NAME, "password")  # name 属性取得
 
 user_id.clear()
 pass_word.clear()
 
-user_id.send_keys("***")  # name 属性に値をセット
-pass_word.send_keys("***")  # name 属性に値をセット
+user_id.send_keys("JIM_natsume")  # name 属性に値をセット
+pass_word.send_keys("jimjim")  # name 属性に値をセット
 
 user_id.submit()  # form を submit する。
 
 # ===================================
 # ===================== view_list.php 、 ログイン済み
 # ===================================
+time.sleep(1.0)
+
+# === スクレイピング処理 実行 & ログファイル　出力
+GET_Scraping_Requests(driver.current_url, 'view_list(login).php')
 
 # ラジオボタン ==　式場利用	利用しない
 driver.find_element(By.XPATH,
@@ -208,6 +216,9 @@ driver.execute_script(
 # ===================================
 
 time.sleep(1.0)
+
+# === スクレイピング処理 実行 & ログファイル　出力
+GET_Scraping_Requests(driver.current_url, 'reserve_edit.php')
 
 # ======================== フォームに値セット
 
