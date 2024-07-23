@@ -10,6 +10,12 @@ class Config_Setting():
     # 対象 URL
     READ_URL = "https://192.168.254.204/kdemo/index.php"
 
+    # ソース名
+    SOURCE_01 = "index.html"
+    SOURCE_02 = "login.html"
+    SOURCE_03 = "reserve_list.html"
+    SOURCE_04 = "view_list.html"
+
     @staticmethod
     def get_config():
         """

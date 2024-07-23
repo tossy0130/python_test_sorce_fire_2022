@@ -562,7 +562,7 @@ t_time_1 = Date_Obj.Yoyaku_Time_idx(1, 1)  # 例：15:00
 
 # === 当日日付けを、10日プラスして、str に変えて s_data_add に格納
 # 日付指定　　
-date_add = Date_Obj.Date_Add(9)  # ********* パラメータ日後 *********
+date_add = Date_Obj.Date_Add(10)  # ********* パラメータ日後 *********
 s_date_add = Date_Obj.Date_cut(date_add)
 print('s_date_add:::' + s_date_add)
 

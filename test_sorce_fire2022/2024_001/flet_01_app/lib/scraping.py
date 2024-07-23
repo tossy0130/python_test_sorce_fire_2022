@@ -2,6 +2,9 @@ import requests
 import os
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+# 外部ファイル読み込み
 from lib.file_related import File_related
 
 
@@ -27,3 +30,29 @@ class Scraping_Requests(File_related):
                 print("dir_path:::" + dir_path + "\n")
         except Exception as e:
             print(f"ファイル処理中にエラーが発生しました:{e}")
+
+    @staticmethod
+    def Set_Name_Val(name, set_val, set_driver):
+        """
+        name に値を入れる
+        """
+        tmp_name = set_driver.find_element(By.NAME, name)  # name 属性取得
+        tmp_name.clear()
+        tmp_name.send_keys(set_val)  # name 属性に値をセット
+
+    @staticmethod
+    def Set_Name_Val_Select(name, idx, set_driver):
+        """ 
+        name に番号で値を入れる
+        """
+        tmp_name = set_driver.find_element(By.NAME, name)  # name 属性取得
+        tmp_name.clear()
+        tmp_name.select_by_index(idx)  # name 属性に値をセット
+
+    @staticmethod
+    def Sub_Mit(name, set_driver):
+        """ 
+        submit する
+        """
+        tmp_name = set_driver.find_element(By.NAME, name)  # name 属性取得
+        tmp_name.submit()
